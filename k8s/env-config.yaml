@@ -1,0 +1,175 @@
+# Environment Configuration Template
+# Copy this file and customize for different environments (dev, staging, prod)
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: app-config
+  labels:
+    app: testkube-fun
+    environment: development
+data:
+  # Application Environment
+  NODE_ENV: "development"
+  LOG_LEVEL: "debug"
+
+  # API Configuration
+  API_PORT: "8080"
+  API_HOST: "0.0.0.0"
+  API_CORS_ORIGIN: "*"
+
+  # Web Configuration
+  WEB_PORT: "4173"
+  WEB_HOST: "0.0.0.0"
+
+  # Database Configuration
+  DB_HOST: "postgres-service"
+  DB_PORT: "5432"
+  DB_NAME: "api-db"
+  DB_USER: "api-user"
+  DB_MAX_CONNECTIONS: "10"
+  DB_IDLE_TIMEOUT: "30000"
+
+  # Redis Configuration (if needed)
+  # REDIS_HOST: "redis-service"
+  # REDIS_PORT: "6379"
+
+  # External Services
+  # EXTERNAL_API_BASE_URL: "https://api.example.com"
+  # WEBHOOK_URL: "https://webhooks.example.com"
+
+  # Feature Flags
+  FEATURE_ANALYTICS: "false"
+  FEATURE_DEBUG_MODE: "true"
+  FEATURE_RATE_LIMITING: "false"
+
+  # Security
+  CORS_ENABLED: "true"
+  HTTPS_ONLY: "false"
+  SECURE_COOKIES: "false"
+
+  # Performance
+  REQUEST_TIMEOUT: "30000"
+  BODY_LIMIT: "10mb"
+
+  # Monitoring
+  METRICS_ENABLED: "true"
+  HEALTH_CHECK_INTERVAL: "30"
+
+---
+# Environment-specific secrets template
+apiVersion: v1
+kind: Secret
+metadata:
+  name: app-secrets
+  labels:
+    app: testkube-fun
+    environment: development
+type: Opaque
+data:
+  # Database password (base64 encoded)
+  DB_PASSWORD: YXBpLXBhc3N3b3Jk  # "api-password"
+
+  # JWT secret for API authentication (base64 encoded)
+  JWT_SECRET: bXktand0LXNlY3JldC1rZXk=  # "my-jwt-secret-key"
+
+  # API keys for external services (base64 encoded)
+  # EXTERNAL_API_KEY: ""
+  # WEBHOOK_SECRET: ""
+
+  # Encryption keys (base64 encoded)
+  # ENCRYPTION_KEY: ""
+
+  # Database admin password (if different from app password)
+  # DB_ADMIN_PASSWORD: ""
+
+---
+# Environment-specific resource limits
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: resource-limits
+  labels:
+    app: testkube-fun
+    environment: development
+data:
+  # API Resources
+  api_cpu_request: "100m"
+  api_cpu_limit: "500m"
+  api_memory_request: "128Mi"
+  api_memory_limit: "512Mi"
+  api_replicas: "2"
+
+  # Web Resources
+  web_cpu_request: "50m"
+  web_cpu_limit: "200m"
+  web_memory_request: "64Mi"
+  web_memory_limit: "256Mi"
+  web_replicas: "2"
+
+  # Database Resources
+  db_cpu_request: "250m"
+  db_cpu_limit: "1000m"
+  db_memory_request: "256Mi"
+  db_memory_limit: "1Gi"
+  db_storage_size: "1Gi"
+  db_storage_class: "standard"
+
+---
+# Environment-specific ingress configuration
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: ingress-config
+  labels:
+    app: testkube-fun
+    environment: development
+data:
+  # Domain configuration
+  domain: "testkube-fun.local"
+  tls_enabled: "false"
+
+  # SSL/TLS
+  ssl_redirect: "false"
+  cert_manager_issuer: "letsencrypt-staging"
+
+  # Load balancing
+  load_balancer_class: "nginx"
+  session_affinity: "None"
+
+  # Security headers
+  security_headers_enabled: "true"
+  hsts_enabled: "false"
+
+  # Rate limiting
+  rate_limit_enabled: "false"
+  rate_limit_rps: "10"
+
+  # CORS settings
+  cors_allow_origin: "*"
+  cors_allow_methods: "GET, POST, PUT, DELETE, OPTIONS"
+  cors_allow_headers: "DNT,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Range,Authorization"
+
+---
+# Instructions for different environments:
+#
+# DEVELOPMENT:
+# - Use the values as-is
+# - Enable debug features
+# - Use minimal resource limits
+# - Allow CORS from any origin
+#
+# STAGING:
+# - Update domain to staging domain
+# - Enable TLS
+# - Increase resource limits
+# - Restrict CORS origins
+# - Enable rate limiting
+#
+# PRODUCTION:
+# - Update domain to production domain
+# - Enable all security features
+# - Set production resource limits
+# - Use strong passwords and secrets
+# - Enable monitoring and logging
+# - Use production storage classes
