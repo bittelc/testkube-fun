@@ -4,6 +4,8 @@ import reactLogo from "./assets/react.svg";
 import "./App.css";
 
 const API_ORIGIN = "http://localhost:8080";
+// This is problematic for a k8s-based deployment.
+// Consider refactoring this to use an environment variable
 
 function App() {
   return (
