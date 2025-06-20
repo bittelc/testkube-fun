@@ -4,6 +4,7 @@ import reactLogo from "./assets/react.svg";
 import "./App.css";
 
 const API_ORIGIN = import.meta.env.API_ORIGIN || "localhost:8080";
+// Enable for multi-env.
 
 function App() {
   return (

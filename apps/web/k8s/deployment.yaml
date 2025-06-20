@@ -14,11 +14,37 @@ spec:
     spec:
       containers:
         - name: hello-web
-          image: ttl.sh/wito-hello-web:1h
+          image: ttl.sh/wito-hello-web:1h # I had never heard of this. Cool!
           imagePullPolicy: Always
           ports:
             - name: http-web
               containerPort: 4173
           env:
             - name: API_ORIGIN
-              value: "http://api.example.local" # todo make this dynamic per env
+              value: "http://api.example.local"
+              ## There's a convo to be had about this.
+              # My recommendations:
+                # 1. Use the API's Service endpoint, not the Ingress endpoint
+                # 2. Inject it at deploy time via app config files, not via k8s
+                #   config. This will allow for env-specific variables which
+                #   is necessary many different variable values.
+
+          # liveness and readiness probes are basics for most CICD
+          # systems. I have not tested these endpoints, and am including
+          # these as references to discuss for interview.
+          livenessProbe:
+            httpGet:
+              path: /
+              port: http-web
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 3
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http-web
+            initialDelaySeconds: 5
+            periodSeconds: 5
+            timeoutSeconds: 3
+            failureThreshold: 3

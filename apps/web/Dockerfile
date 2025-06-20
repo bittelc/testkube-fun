@@ -1,6 +1,9 @@
 # What a journey this Dockerfile has been!
 # My time and patience ran out as I was trying to build and push this
-# thing. Note to self and reviewers, let's talk about this exciting
+# thing and therefore, the improvements I intended to make to this
+# were not possible. I have therefore focused on comments indicating
+# my intent, and not actual deployable improvements.
+#  Note to self and reviewers, let's talk about this exciting
 # journey I've had with `docker push` in the interview
 
 FROM node:lts as build

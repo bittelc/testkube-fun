@@ -1,3 +1,10 @@
+# Given the complexity of this application stack, I believe this Ingress
+# object isn't yet necessary. Because this backend is only receiving
+# traffic from a single, known endpoint that lives within the cluster,
+# it is fine just to expose the backend with a k8s Service object
+# and direct traffic from the web Service to the backend Service object
+# eg. GET `http://hello-app-service.default.svc.cluster.local`
+
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:

@@ -19,3 +19,23 @@ spec:
           ports:
             - name: http-web
               containerPort: 8080
+
+          # liveness and readiness probes are basics for most CICD
+          # systems. I have not tested these endpoints, and am including
+          # these as references to discuss for interview.
+          livenessProbe:
+            httpGet:
+              path: /
+              port: http-web
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 3
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http-web
+            initialDelaySeconds: 5
+            periodSeconds: 5
+            timeoutSeconds: 3
+            failureThreshold: 3
