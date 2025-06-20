@@ -1,0 +1,26 @@
+# Worth noting is that it can simplify the k8s configuration
+# to utilize a Servie.Type: LoadBalancer, and have no
+# Ingress object at all. This would probably be a better option
+# for such a small, contained 3-tier web-app.
+
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: hello-web-ingress
+  labels:
+    app: hello-web
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: web.example.local
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: hello-web-service
+                port:
+                  number: 80

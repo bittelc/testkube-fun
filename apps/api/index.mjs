@@ -25,6 +25,7 @@ app.get("/hello-pg", async (_, response) => {
 
     const client = new pg.Client({
       connectionString: `postgres://api-user:api-password@${DB_HOST}:${DB_PORT}/api-db`,
+      // Of note, the password here is hardcoded, plain text
     });
     await client.connect();
 
