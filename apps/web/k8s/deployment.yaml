@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hello-web
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: hello-web
+  template:
+    metadata:
+      labels:
+        app: hello-web
+    spec:
+      containers:
+        - name: hello-web
+          image: ttl.sh/wito-hello-web:1h
+          imagePullPolicy: Always
+          ports:
+            - name: http-web
+              containerPort: 4173
+          env:
+            - name: API_ORIGIN
+              value: "http://api.example.local" # todo make this dynamic per env
