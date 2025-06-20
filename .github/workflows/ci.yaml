@@ -1,0 +1,63 @@
+# I haven't tested this as I was far overtime.
+# I wanted to illustrate here that the "build and push" responsibilities
+# for the product team are still their responsibility. But the CD
+# and other infra-related CD (eg. scaling) are not theirs, so
+# there is no is no `cd.yaml` file as that is taken care of by
+# the Platform Team. See Deliverable #1 for more details.
+#
+name: CI - Build and Push Docker Images
+
+on:
+  push:
+    branches:
+      - "*"
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Build
+        uses: docker/setup-buildx-action@v3
+
+      - name: Set branch name
+        shell: bash
+        run: echo "BRANCH_NAME=${GITHUB_REF#refs/heads/}" >> $GITHUB_ENV
+
+      # This deployment logic is where the product team must
+      # decide how, when they will deploy their application, and is
+      # one of their primary CICD responsibilities.
+      # Once `production` is labelled on an image, it's deployed
+      # to production, as per the Platform Team's responsbilities.
+      - name: Set image tag
+        shell: bash
+        run: |
+          if [ "${{ env.BRANCH_NAME }}" = "main" ]; then
+            echo "IMAGE_TAG=production" >> $GITHUB_ENV
+          else
+            echo "IMAGE_TAG=${{ env.BRANCH_NAME }}" >> $GITHUB_ENV
+            echo "IMAGE_TAG=dev" >> $GITHUB_ENV
+          fi
+
+      - name: Build and push API image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ./apps/api/Dockerfile
+          push: true
+          tags: |
+            ttl.sh/testkube-api:${{ env.BRANCH_NAME }}
+            ttl.sh/testkube-api:${{ env.IMAGE_TAG }}
+
+      - name: Build and push Web image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ./apps/web/Dockerfile
+          push: true
+          tags: |
+            ttl.sh/testkube-web:${{ env.BRANCH_NAME }}
+            ttl.sh/testkube-web:${{ env.IMAGE_TAG }}
