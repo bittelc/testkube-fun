@@ -3,7 +3,8 @@ import testkubeLogo from "./assets/testkube.svg";
 import reactLogo from "./assets/react.svg";
 import "./App.css";
 
-const API_ORIGIN = "http://localhost:8080";
+const API_ORIGIN = import.meta.env.API_ORIGIN || "localhost:8080";
+// Enable for multi-env.
 
 function App() {
   return (

@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: hello-web-service
+  labels:
+    app: hello-web
+spec:
+  selector:
+    app: hello-web
+  ports:
+    - name: http-web
+      port: 80
+      # of note, if this Service becomes a type LoadBalancer, it
+      # is essentail that port be upgraded with TLS, and not
+      # use port 80. Even now, with it internal, probs good to
+      # use TLS within the cluster.
+      targetPort: 4173
+      protocol: TCP
+  type: ClusterIP
